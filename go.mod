@@ -128,5 +128,6 @@ replace (
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 	github.com/tecbot/gorocksdb => github.com/cosmos/gorocksdb v1.2.0
 	github.com/tendermint/tendermint => github.com/terra-money/tendermint v0.34.14-terra.2
+	github.com/tendermint/tm-db => github.com/nghuyenthevinh2000/tm-db v0.0.0-20221202061720-372847b85ffa
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
 )
