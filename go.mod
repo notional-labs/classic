@@ -74,7 +74,7 @@ require (
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/jmhodges/levigo v1.0.0 // indirect
 	github.com/keybase/go-keychain v0.0.0-20190712205309-48d3d31d256d // indirect
-	github.com/klauspost/compress v1.11.7 // indirect
+	github.com/klauspost/compress v1.15.12 // indirect
 	github.com/lib/pq v1.10.2 // indirect
 	github.com/libp2p/go-buffer-pool v0.0.2 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
@@ -126,8 +126,9 @@ replace (
 	github.com/cosmos/cosmos-sdk => github.com/terra-rebels/cosmos-sdk v0.44.6-0.20221016182956-c5c6f52d0a59
 	github.com/cosmos/ledger-cosmos-go => github.com/terra-money/ledger-terra-go v0.11.2
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+	github.com/syndtr/goleveldb => github.com/nghuyenthevinh2000/goleveldb v0.0.0-20221203145043-0fa1d7c61e03
 	github.com/tecbot/gorocksdb => github.com/cosmos/gorocksdb v1.2.0
 	github.com/tendermint/tendermint => github.com/terra-money/tendermint v0.34.14-terra.2
-	github.com/tendermint/tm-db => github.com/nghuyenthevinh2000/tm-db v0.0.0-20221202061720-372847b85ffa
+	github.com/tendermint/tm-db => github.com/nghuyenthevinh2000/tm-db v0.0.0-20221203145337-636810b22677
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
 )

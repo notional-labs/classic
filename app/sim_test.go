@@ -27,8 +27,9 @@ func init() {
 }
 
 // Profile with:
-// /usr/local/go/bin/go test -benchmem -run=^$ github.com/cosmos/cosmos-sdk/GaiaApp -bench ^BenchmarkFullAppSimulation$ -Commit=true -cpuprofile cpu.out
+// /usr/local/go/bin/go test -benchmem -run=^$ github.com/terra-money/core/app -bench ^BenchmarkFullAppSimulation$ -Commit=true -cpuprofile cpu.out
 func BenchmarkFullAppSimulation(b *testing.B) {
+	simapp.FlagEnabledValue = true
 	config, db, dir, logger, _, err := simapp.SetupSimulation("goleveldb-app-sim", "Simulation")
 	if err != nil {
 		b.Fatalf("simulation setup failed: %s", err.Error())
@@ -80,8 +81,8 @@ func interBlockCacheOpt() func(*baseapp.BaseApp) {
 	return baseapp.SetInterBlockCache(store.NewCommitKVStoreCacheManager())
 }
 
-//// TODO: Make another test for the fuzzer itself, which just has noOp txs
-//// and doesn't depend on the application.
+// // TODO: Make another test for the fuzzer itself, which just has noOp txs
+// // and doesn't depend on the application.
 func TestAppStateDeterminism(t *testing.T) {
 	if !simapp.FlagEnabledValue {
 		t.Skip("skipping application simulation")
