@@ -16,7 +16,7 @@ func migrateMultiSigAccount(account types.AccountI) (types.AccountI, error) {
 	}
 
 	_ = account.SetPubKey(nil)
-	return account.(types.AccountI), nil //nolint:gocritic
+	return account.(types.AccountI), nil //nolint:gosimple,gocritic
 }
 
 // MigrateAccount migrates multisig account's PubKey as nil to restore mistakenly set PubKey
