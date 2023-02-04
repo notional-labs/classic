@@ -1,7 +1,5 @@
 package simulation
 
-//DONTCOVER
-
 import (
 	"math/rand"
 	"strings"
@@ -48,15 +46,14 @@ func WeightedOperations(
 }
 
 // SimulateMsgSwap generates a MsgSwap with random values.
-// nolint: funlen
 func SimulateMsgSwap(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
-	ok types.OracleKeeper) simtypes.Operation {
+	ok types.OracleKeeper,
+) simtypes.Operation {
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		account := ak.GetAccount(ctx, simAccount.Address)
 
@@ -128,7 +125,6 @@ func SimulateMsgSwapSend(
 	return func(
 		r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
 	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
-
 		simAccount, _ := simtypes.RandomAcc(r, accs)
 		receiverAccount, _ := simtypes.RandomAcc(r, accs)
 		account := ak.GetAccount(ctx, simAccount.Address)

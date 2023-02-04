@@ -25,7 +25,7 @@ func TestCompileCosts(t *testing.T) {
 	bzLength := 10
 
 	cost := CompileCosts(bzLength)
-	require.Equal(t, sdk.Gas(10*compileCostPerByte), cost)
+	require.Equal(t, 10*compileCostPerByte, cost)
 }
 
 func TestInstantiateContractCosts(t *testing.T) {

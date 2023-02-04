@@ -8,7 +8,6 @@ import (
 	"github.com/tendermint/tendermint/crypto/secp256k1"
 
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
-	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/simapp"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
@@ -575,12 +574,13 @@ func addValidator(
 	ctx sdk.Context,
 	stakingKeeper stakingkeeper.Keeper,
 	accountKeeper authkeeper.AccountKeeper,
-	bankKeeper bankkeeper.Keeper, value sdk.Coin) sdk.ValAddress {
+	bankKeeper bankkeeper.Keeper, value sdk.Coin,
+) sdk.ValAddress {
 	privKey := secp256k1.GenPrivKey()
 	pubKey := privKey.PubKey()
 	addr := sdk.ValAddress(pubKey.Address())
 
-	pkAny, _ := codectypes.NewAnyWithValue(cryptotypes.PubKey(simapp.CreateTestPubKeys(1)[0]))
+	pkAny, _ := codectypes.NewAnyWithValue(simapp.CreateTestPubKeys(1)[0])
 	owner := createFakeFundedAccount(ctx, accountKeeper, bankKeeper, sdk.Coins{value})
 
 	msg := stakingtypes.MsgCreateValidator{
@@ -624,8 +624,8 @@ func setValidatorRewards(
 	bankKeeper bankkeeper.Keeper,
 	stakingKeeper stakingkeeper.Keeper,
 	distKeeper distrkeeper.Keeper,
-	valAddr sdk.ValAddress, rewards ...sdk.Coin) {
-
+	valAddr sdk.ValAddress, rewards ...sdk.Coin,
+) {
 	// allocate some rewards
 	validator := stakingKeeper.Validator(ctx, valAddr)
 	payout := sdk.NewDecCoinsFromCoins(rewards...)
