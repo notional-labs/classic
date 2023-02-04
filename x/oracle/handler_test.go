@@ -154,13 +154,13 @@ func TestAggregatePrevoteVote(t *testing.T) {
 	require.Error(t, err)
 
 	// Unintended denom vote
-	aggregateExchangeRateVoteMsg = types.NewMsgAggregateExchangeRateVote(salt, unintendedExchageRateStr, sdk.AccAddress(keeper.Addrs[0]), keeper.ValAddrs[0])
+	aggregateExchangeRateVoteMsg = types.NewMsgAggregateExchangeRateVote(salt, unintendedExchageRateStr, keeper.Addrs[0], keeper.ValAddrs[0])
 	_, err = h(input.Ctx, aggregateExchangeRateVoteMsg)
 	require.Error(t, err)
 
 	// Valid exchange rate reveal submission
 	input.Ctx = input.Ctx.WithBlockHeight(1)
-	aggregateExchangeRateVoteMsg = types.NewMsgAggregateExchangeRateVote(salt, exchangeRatesStr, sdk.AccAddress(keeper.Addrs[0]), keeper.ValAddrs[0])
+	aggregateExchangeRateVoteMsg = types.NewMsgAggregateExchangeRateVote(salt, exchangeRatesStr, keeper.Addrs[0], keeper.ValAddrs[0])
 	_, err = h(input.Ctx, aggregateExchangeRateVoteMsg)
 	require.NoError(t, err)
 }
