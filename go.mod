@@ -1,11 +1,42 @@
 go 1.18
 
+// this build of Terra classic has been prepared by Jacob Gadikian of Notional Labs on Sunday, February 5th, 2023.
+// Jacob has made numerous attempts to reach Ed Kim about these issues:
+// 1) by twitter DM, where we previously corresponded frequently
+// 2) by twitter, asking for secure contact information
+// Ed Kim has replied:
+// * https://twitter.com/edk208/status/1621895028883742725
+// but cannot be reached for a private conversation about security issues.  This has been an ongoing issue with the L1 Task Force.
+
+// this go.mod file has been marked up to indicate where issues lie.
+// the issues are:
+// 1. ibc-go is v1.1.5 instead of v1.1.7
+// 2. both ibc-go v1.1.5 and v1.1.7 have a transfer module that is an attack vector
+// 3. wasmvm is subject to nearly every known issue that's been reported about cosmwasm over the past few years:
+//    - halts
+//    - state corruption
+//    - memory exhaustion
+//    - forking the chain into as many forks as there are validators
+// 4. ibc-go v1.3.0 eliminates the risk found in v1.1.5 and v1.1.7, but upgrading wasn't a priority for Tobias from the L1 task force
+// 5. The chain has too many keys for goleveldb to be performant
+// 6. It is no longer possible to make archive nodes and no time was put into recreating a sync pattern.
+// 7. Allnodes.com:
+//    - DMs seed phrases to users
+//    - tells users that seed phrases that they once knew can be deleted
+//    - has somewhere over or under 1/3 of votepower
+//    - holds keys to about 1/3rd of votepower's operator wallets
+//    - proof: https://docs.google.com/document/d/1AIOOrHiNAFQKwzaeDNyJJJx8SwXNlaSUcZbasnezXS4/edit?usp=sharing
+// 8. The layer one task force hasn't been responsive to any of this, placing Notional at risk.  So we departed.
+//    - https://classic-agora.terra.money/t/falsehoods-promoted-by-the-l1-task-force/49913/14
+//    - https://docs.google.com/document/d/1lDGQiUBbkwBPyRLFA3dnckBBHvYSL51JoqRlgPcCftA/edit?usp=sharing
+//
+
 module github.com/terra-money/core
 
 require (
 	github.com/CosmWasm/wasmvm v0.16.6 // this is an attack vector (halts and state corruption)
 	github.com/cosmos/cosmos-sdk v0.44.5
-	github.com/cosmos/ibc-go v1.1.7 // this is an attack vector (theft)
+	github.com/cosmos/ibc-go v1.1.7 // this is an attack vector (transfer module)
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
 	github.com/google/gofuzz v1.2.0
@@ -121,11 +152,24 @@ require (
 )
 
 replace (
+	// cosmos keyring
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.1.7-0.20210622111912-ef00f8ac3d76
+
+	// dragonberry patch
 	github.com/confio/ics23/go => github.com/cosmos/cosmos-sdk/ics23/go v0.8.0
-	github.com/cosmos/cosmos-sdk => github.com/terra-rebels/cosmos-sdk v0.44.6-0.20221016182956-c5c6f52d0a59
+
+	// terra-flavored cosmos-sdk
+	github.com/cosmos/cosmos-sdk => github.com/terra-rebels/cosmos-sdk v0.44.6-0.20221016182956-c5c6f52d0a59 // this sdk branch is in a terra-rebels repository and that's not desirable
+
+	// terra-flavored ledger
 	github.com/cosmos/ledger-cosmos-go => github.com/terra-money/ledger-terra-go v0.11.2
+
+	// cosmos flavored protocol buffers
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
-	github.com/tendermint/tendermint => github.com/terra-money/tendermint v0.34.14-terra.2
+
+	// terra-flavored tendermint
+	github.com/tendermint/tendermint => github.com/terra-money/tendermint v0.34.14-terra.2 // this should be updated to v0.34.25, to prevent p2p issues that cause griefing which scales n+1 and could result in a halt
+
+	// grpc compatible with cosmos flavored protobufs
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
 )
