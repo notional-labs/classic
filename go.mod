@@ -39,7 +39,7 @@ module github.com/terra-money/core
 require (
 	github.com/CosmWasm/wasmvm v0.16.6 // this is an attack vector (halts and state corruption)
 	github.com/cosmos/cosmos-sdk v0.44.6
-	github.com/cosmos/ibc-go v1.3.0 // this is an attack vector (transfer module)
+	github.com/cosmos/ibc-go v1.3.0 // THREAT RESOLVED IN THIS BRANCH
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
 	github.com/google/gofuzz v1.2.0
