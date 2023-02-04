@@ -20,7 +20,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	xauthsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
-	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
 	terraapp "github.com/terra-money/core/app"
@@ -147,9 +146,9 @@ func expectedGasCostByKeys(pubkeys []cryptotypes.PubKey) uint64 {
 		pubkeyType := strings.ToLower(fmt.Sprintf("%T", pubkey))
 		switch {
 		case strings.Contains(pubkeyType, "ed25519"):
-			cost += types.DefaultParams().SigVerifyCostED25519
+			cost += authtypes.DefaultParams().SigVerifyCostED25519
 		case strings.Contains(pubkeyType, "secp256k1"):
-			cost += types.DefaultParams().SigVerifyCostSecp256k1
+			cost += authtypes.DefaultParams().SigVerifyCostSecp256k1
 		default:
 			panic("unexpected key type")
 		}

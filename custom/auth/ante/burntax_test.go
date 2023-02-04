@@ -67,12 +67,14 @@ func (suite *AnteTestSuite) TestEnsureBurnTaxModule() {
 	suite.Require().NoError(err)
 
 	// Populate the FeeCollector module with taxes
-	bk.SendCoinsFromModuleToModule(suite.ctx, minttypes.ModuleName, types.FeeCollectorName, taxes)
+	err = bk.SendCoinsFromModuleToModule(suite.ctx, minttypes.ModuleName, types.FeeCollectorName, taxes)
+	suite.Require().NoError(err)
 	feeCollector := suite.app.AccountKeeper.GetModuleAccount(suite.ctx, types.FeeCollectorName)
 
 	amountFee := bk.GetAllBalances(suite.ctx, feeCollector.GetAddress())
 	suite.Require().Equal(amountFee, taxes)
 	totalSupply, _, err := bk.GetPaginatedTotalSupply(suite.ctx, &query.PageRequest{})
+	suite.Require().NoError(err)
 
 	// must pass with tax and burn
 	_, err = antehandler(suite.ctx, tx, false)
@@ -83,6 +85,7 @@ func (suite *AnteTestSuite) TestEnsureBurnTaxModule() {
 	suite.Require().NoError(err)
 
 	supplyAfterBurn, _, err := bk.GetPaginatedTotalSupply(suite.ctx, &query.PageRequest{})
+	suite.Require().NoError(err)
 
 	// Total supply should have decreased by the tax amount
 	suite.Require().Equal(taxes, totalSupply.Sub(supplyAfterBurn))

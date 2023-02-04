@@ -83,6 +83,8 @@ func TestLegacyContractState(t *testing.T) {
 	require.Error(t, err)
 
 	bz, err = input.Cdc.MarshalJSON(types.NewQueryCodeIDParams(contractID))
+	require.NoError(t, err)
+
 	_, err = querier(ctx, []string{types.QueryGetByteCode}, abci.RequestQuery{Data: bz})
 	require.NoError(t, err)
 
@@ -90,6 +92,8 @@ func TestLegacyContractState(t *testing.T) {
 	require.NoError(t, err)
 
 	bz, err = input.Cdc.MarshalJSON(types.NewQueryContractAddressParams(addr))
+	require.NoError(t, err)
+
 	_, err = querier(ctx, []string{types.QueryGetContractInfo}, abci.RequestQuery{Data: bz})
 	require.NoError(t, err)
 

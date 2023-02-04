@@ -128,6 +128,8 @@ func TestInstantiateMaker(t *testing.T) {
 	}
 
 	initBz, err := json.Marshal(&initMsg)
+	require.NoError(t, err)
+
 	makerAddr, _, err := keeper.InstantiateContract(input.Ctx, makerID, creatorAddr, sdk.AccAddress{}, initBz, nil)
 	require.NoError(t, err)
 	require.NotEmpty(t, makerAddr)
@@ -153,6 +155,8 @@ func TestMarketQuerier(t *testing.T) {
 	}
 
 	retCoin, spread, err := marketKeeper.ComputeSwap(input.Ctx, offerCoin, core.MicroLunaDenom)
+	require.NoError(t, err)
+
 	retAmount := retCoin.Amount.Mul(sdk.OneDec().Sub(spread)).TruncateInt()
 
 	bz, err := json.Marshal(swapQueryMsg)
@@ -281,6 +285,8 @@ func TestBuyMsg(t *testing.T) {
 	ctx, keeper, accKeeper, bankKeeper := input.Ctx, input.WasmKeeper, input.AccKeeper, input.BankKeeper
 
 	retCoin, spread, err := input.MarketKeeper.ComputeSwap(input.Ctx, offerCoin, core.MicroLunaDenom)
+	require.NoError(t, err)
+
 	expectedRetCoins := sdk.NewCoins(sdk.NewCoin(core.MicroLunaDenom, retCoin.Amount.Mul(sdk.OneDec().Sub(spread)).TruncateInt()))
 
 	// buy without limit
@@ -289,6 +295,7 @@ func TestBuyMsg(t *testing.T) {
 	}
 
 	bz, err := json.Marshal(&buyMsg)
+	require.NoError(t, err)
 
 	// normal buy
 	_, err = keeper.ExecuteContract(ctx, makerAddr, creatorAddr, bz, sdk.NewCoins(offerCoin))
@@ -416,14 +423,16 @@ func setupMakerContract(t *testing.T) (input TestInput, creatorAddr, makerAddr s
 	}
 
 	initBz, err := json.Marshal(&initMsg)
+	require.NoError(t, err)
+
 	makerAddr, _, err = keeper.InstantiateContract(input.Ctx, makerID, creatorAddr, sdk.AccAddress{}, initBz, nil)
 	require.NoError(t, err)
 	require.NotEmpty(t, makerAddr)
 
-	return
+	return input, creatorAddr, makerAddr, initCoin
 }
 
-func setupBindingsTesterContract(t *testing.T) (input TestInput, creatorAddr, bindingsTesterAddr sdk.AccAddress, initCoin sdk.Coin) {
+func setupBindingsTesterContract(t *testing.T) (input TestInput, creatorAddr, bindingsTesterAddr sdk.AccAddress, initCoin sdk.Coin) { //nolint:unparam
 	input = CreateTestInput(t)
 
 	ctx, keeper, accKeeper, bankKeeper, oracleKeeper := input.Ctx, input.WasmKeeper, input.AccKeeper, input.BankKeeper, input.OracleKeeper
@@ -449,9 +458,11 @@ func setupBindingsTesterContract(t *testing.T) (input TestInput, creatorAddr, bi
 
 	type EmptyStruct struct{}
 	initBz, err := json.Marshal(&EmptyStruct{})
+	require.NoError(t, err)
+
 	bindingsTesterAddr, _, err = keeper.InstantiateContract(input.Ctx, bindingsTesterID, creatorAddr, sdk.AccAddress{}, initBz, nil)
 	require.NoError(t, err)
 	require.NotEmpty(t, bindingsTesterAddr)
 
-	return
+	return input, creatorAddr, bindingsTesterAddr, initCoin
 }
