@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/proto" //nolint:staticcheck // we mean to use this version
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -13,10 +13,7 @@ import (
 
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
 
-	"github.com/cosmos/cosmos-sdk/codec"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	authkeeper "github.com/cosmos/cosmos-sdk/x/auth/keeper"
 	bankkeeper "github.com/cosmos/cosmos-sdk/x/bank/keeper"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
@@ -372,35 +369,6 @@ func checkAccount(t *testing.T, ctx sdk.Context, accKeeper authkeeper.AccountKee
 			assert.Equal(t, expected, balance)
 		}
 	}
-}
-
-/**** Code to support custom messages *****/
-type reflectCustomMsg struct {
-	Debug string `json:"debug,omitempty"`
-	Raw   []byte `json:"raw,omitempty"`
-}
-
-// toMaskRawMsg encodes an sdk msg using amino json encoding.
-// Then wraps it as an opaque message
-func toMaskRawMsg(cdc codec.Codec, msg sdk.Msg) (wasmvmtypes.CosmosMsg, error) {
-	any, err := codectypes.NewAnyWithValue(msg)
-	if err != nil {
-		return wasmvmtypes.CosmosMsg{}, err
-	}
-	rawBz, err := cdc.MarshalJSON(any)
-	if err != nil {
-		return wasmvmtypes.CosmosMsg{}, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
-	}
-
-	customMsg, err := json.Marshal(reflectCustomMsg{Raw: rawBz})
-	if err != nil {
-		return wasmvmtypes.CosmosMsg{}, sdkerrors.Wrap(sdkerrors.ErrJSONMarshal, err.Error())
-	}
-
-	res := wasmvmtypes.CosmosMsg{
-		Custom: customMsg,
-	}
-	return res, nil
 }
 
 func TestReflectInvalidStargateQuery(t *testing.T) {

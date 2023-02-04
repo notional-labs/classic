@@ -17,23 +17,6 @@ import (
 
 const custom = "custom"
 
-func getQueriedTaxRate(t *testing.T, ctx sdk.Context, cdc *codec.LegacyAmino, querier sdk.Querier, epoch int64) sdk.Dec {
-	query := abci.RequestQuery{
-		Path: strings.Join([]string{custom, types.QuerierRoute, types.QueryTaxRate}, "/"),
-		Data: nil,
-	}
-
-	bz, err := querier(ctx, []string{types.QueryTaxRate}, query)
-	require.Nil(t, err)
-	require.NotNil(t, bz)
-
-	var response sdk.Dec
-	err2 := cdc.UnmarshalJSON(bz, &response)
-	require.Nil(t, err2)
-
-	return response
-}
-
 func getQueriedTaxCap(t *testing.T, ctx sdk.Context, cdc *codec.LegacyAmino, querier sdk.Querier, denom string) sdk.Int {
 	params := types.QueryTaxCapParams{
 		Denom: denom,
@@ -69,57 +52,6 @@ func getQueriedTaxCaps(t *testing.T, ctx sdk.Context, cdc *codec.LegacyAmino, qu
 	require.NotNil(t, bz)
 
 	var response types.TaxCapsQueryResponse
-	err2 := cdc.UnmarshalJSON(bz, &response)
-	require.Nil(t, err2)
-
-	return response
-}
-
-func getQueriedRewardWeight(t *testing.T, ctx sdk.Context, cdc *codec.LegacyAmino, querier sdk.Querier, epoch int64) sdk.Dec {
-	query := abci.RequestQuery{
-		Path: strings.Join([]string{custom, types.QuerierRoute, types.QueryRewardWeight}, "/"),
-		Data: nil,
-	}
-
-	bz, err := querier(ctx, []string{types.QueryRewardWeight}, query)
-	require.Nil(t, err)
-	require.NotNil(t, bz)
-
-	var response sdk.Dec
-	err2 := cdc.UnmarshalJSON(bz, &response)
-	require.Nil(t, err2)
-
-	return response
-}
-
-func getQueriedTaxProceeds(t *testing.T, ctx sdk.Context, cdc *codec.LegacyAmino, querier sdk.Querier, epoch int64) sdk.Coins {
-	query := abci.RequestQuery{
-		Path: strings.Join([]string{custom, types.QuerierRoute, types.QueryTaxProceeds}, "/"),
-		Data: nil,
-	}
-
-	bz, err := querier(ctx, []string{types.QueryTaxProceeds}, query)
-	require.Nil(t, err)
-	require.NotNil(t, bz)
-
-	var response sdk.Coins
-	err2 := cdc.UnmarshalJSON(bz, &response)
-	require.Nil(t, err2)
-
-	return response
-}
-
-func getQueriedSeigniorageProceeds(t *testing.T, ctx sdk.Context, cdc *codec.LegacyAmino, querier sdk.Querier, epoch int64) sdk.Int {
-	query := abci.RequestQuery{
-		Path: strings.Join([]string{custom, types.QuerierRoute, types.QuerySeigniorageProceeds}, "/"),
-		Data: nil,
-	}
-
-	bz, err := querier(ctx, []string{types.QuerySeigniorageProceeds}, query)
-	require.Nil(t, err)
-	require.NotNil(t, bz)
-
-	var response sdk.Int
 	err2 := cdc.UnmarshalJSON(bz, &response)
 	require.Nil(t, err2)
 
@@ -172,30 +104,6 @@ func TestLegacyQueryParams(t *testing.T) {
 	require.Equal(t, queriedParams, params)
 }
 
-func TestLegacyQueryRewardWeight(t *testing.T) {
-	input := CreateTestInput(t)
-	querier := NewLegacyQuerier(input.TreasuryKeeper, input.Cdc)
-
-	rewardWeight := sdk.NewDecWithPrec(77, 2)
-	input.TreasuryKeeper.SetRewardWeight(input.Ctx, rewardWeight)
-
-	queriedRewardWeight := getQueriedRewardWeight(t, input.Ctx, input.Cdc, querier, input.TreasuryKeeper.GetEpoch(input.Ctx))
-
-	require.Equal(t, queriedRewardWeight, rewardWeight)
-}
-
-func TestLegacyQueryTaxRate(t *testing.T) {
-	input := CreateTestInput(t)
-	querier := NewLegacyQuerier(input.TreasuryKeeper, input.Cdc)
-
-	taxRate := sdk.NewDecWithPrec(1, 3)
-	input.TreasuryKeeper.SetTaxRate(input.Ctx, taxRate)
-
-	queriedTaxRate := getQueriedTaxRate(t, input.Ctx, input.Cdc, querier, input.TreasuryKeeper.GetEpoch(input.Ctx))
-
-	require.Equal(t, queriedTaxRate, taxRate)
-}
-
 func TestLegacyQueryTaxCap(t *testing.T) {
 	input := CreateTestInput(t)
 	querier := NewLegacyQuerier(input.TreasuryKeeper, input.Cdc)
@@ -236,35 +144,6 @@ func TestLegacyQueryTaxCaps(t *testing.T) {
 			},
 		},
 	)
-}
-
-func TestLegacyQueryTaxProceeds(t *testing.T) {
-	input := CreateTestInput(t)
-	querier := NewLegacyQuerier(input.TreasuryKeeper, input.Cdc)
-
-	taxProceeds := sdk.Coins{
-		sdk.NewCoin(core.MicroSDRDenom, sdk.NewInt(1000).MulRaw(core.MicroUnit)),
-	}
-	input.TreasuryKeeper.RecordEpochTaxProceeds(input.Ctx, taxProceeds)
-
-	queriedTaxProceeds := getQueriedTaxProceeds(t, input.Ctx, input.Cdc, querier, input.TreasuryKeeper.GetEpoch(input.Ctx))
-
-	require.Equal(t, queriedTaxProceeds, taxProceeds)
-}
-
-func TestLegacyQuerySeigniorageProceeds(t *testing.T) {
-	input := CreateTestInput(t)
-	querier := NewLegacyQuerier(input.TreasuryKeeper, input.Cdc)
-
-	targetSeigniorage := sdk.NewInt(10)
-	input.TreasuryKeeper.RecordEpochInitialIssuance(input.Ctx)
-
-	input.Ctx = input.Ctx.WithBlockHeight(int64(core.BlocksPerWeek))
-	input.BankKeeper.BurnCoins(input.Ctx, faucetAccountName, sdk.NewCoins(sdk.NewCoin(core.MicroLunaDenom, targetSeigniorage)))
-
-	queriedSeigniorageProceeds := getQueriedSeigniorageProceeds(t, input.Ctx, input.Cdc, querier, input.TreasuryKeeper.GetEpoch(input.Ctx))
-
-	require.Equal(t, targetSeigniorage, queriedSeigniorageProceeds)
 }
 
 func TestLegacyQueryIndicators(t *testing.T) {
