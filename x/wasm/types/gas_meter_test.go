@@ -6,8 +6,6 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
-
 	wasmvmtypes "github.com/CosmWasm/wasmvm/types"
 )
 
@@ -32,7 +30,7 @@ func TestInstantiateContractCosts(t *testing.T) {
 	msgLength := 10
 
 	cost := InstantiateContractCosts(msgLength)
-	require.Equal(t, sdk.Gas(instantiateCost+uint64(msgLength)*contractMessageDataCostPerByte), cost)
+	require.Equal(t, instantiateCost+uint64(msgLength)*contractMessageDataCostPerByte, cost)
 }
 
 func TestReplyCosts(t *testing.T) {

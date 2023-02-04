@@ -467,7 +467,7 @@ func TestDispatchSubMsgConditionalReplyOn(t *testing.T) {
 		},
 	}
 
-	var id uint64 = 0
+	var id uint64
 	for name, tc := range cases {
 		id++
 		t.Run(name, func(t *testing.T) {

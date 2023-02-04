@@ -49,7 +49,7 @@ func TestExchangeRate(t *testing.T) {
 
 	numExchangeRates := 0
 	handler := func(denom string, exchangeRate sdk.Dec) (stop bool) {
-		numExchangeRates = numExchangeRates + 1
+		numExchangeRates++
 		return false
 	}
 	input.OracleKeeper.IterateLunaExchangeRates(input.Ctx, handler)
@@ -370,9 +370,9 @@ func TestValidateFeeder(t *testing.T) {
 	require.NoError(t, input.OracleKeeper.ValidateFeeder(input.Ctx, sdk.AccAddress(addr1), addr1))
 
 	// delegate works
-	input.OracleKeeper.SetFeederDelegation(input.Ctx, sdk.ValAddress(addr), sdk.AccAddress(addr1))
+	input.OracleKeeper.SetFeederDelegation(input.Ctx, addr, sdk.AccAddress(addr1))
 	require.NoError(t, input.OracleKeeper.ValidateFeeder(input.Ctx, sdk.AccAddress(addr1), addr))
-	require.Error(t, input.OracleKeeper.ValidateFeeder(input.Ctx, sdk.AccAddress(Addrs[2]), sdk.ValAddress(addr)))
+	require.Error(t, input.OracleKeeper.ValidateFeeder(input.Ctx, Addrs[2], sdk.ValAddress(addr)))
 
 	// only active validators can do oracle votes
 	validator, found := input.StakingKeeper.GetValidator(input.Ctx, addr)

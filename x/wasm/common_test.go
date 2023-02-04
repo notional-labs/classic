@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	key1, pub1, addr1 = keyPubAddr()
+	_, _, addr1       = keyPubAddr()
 	testContract      []byte
 	reflectContract   []byte
 	oldEscrowContract []byte

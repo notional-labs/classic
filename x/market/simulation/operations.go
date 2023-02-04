@@ -116,7 +116,7 @@ func SimulateMsgSwap(
 }
 
 // SimulateMsgSwapSend generates a MsgSwapSend with random values.
-// nolint: funlen
+//nolint: funlen
 func SimulateMsgSwapSend(
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
