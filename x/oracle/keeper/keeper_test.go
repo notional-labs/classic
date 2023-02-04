@@ -372,7 +372,7 @@ func TestValidateFeeder(t *testing.T) {
 	// delegate works
 	input.OracleKeeper.SetFeederDelegation(input.Ctx, addr, sdk.AccAddress(addr1))
 	require.NoError(t, input.OracleKeeper.ValidateFeeder(input.Ctx, sdk.AccAddress(addr1), addr))
-	require.Error(t, input.OracleKeeper.ValidateFeeder(input.Ctx, Addrs[2], sdk.ValAddress(addr)))
+	require.Error(t, input.OracleKeeper.ValidateFeeder(input.Ctx, Addrs[2], addr))
 
 	// only active validators can do oracle votes
 	validator, found := input.StakingKeeper.GetValidator(input.Ctx, addr)

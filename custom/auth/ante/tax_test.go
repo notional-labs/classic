@@ -563,6 +563,7 @@ func (suite *AnteTestSuite) TestEnsureMempoolFeesMultiSendLunaTax() {
 	// must pass with tax
 	suite.txBuilder.SetFeeAmount(sdk.NewCoins(sdk.NewCoin(core.MicroLunaDenom, expectedTax.Add(expectedTax))))
 	tx, err = suite.CreateTestTx(privs, accNums, accSeqs, suite.ctx.ChainID())
+	suite.Require().NoError(err)
 	_, err = antehandler(suite.ctx, tx, false)
 	suite.Require().NoError(err, "Decorator should not have errored on fee higher than local gasPrice")
 }

@@ -411,6 +411,7 @@ func TestLegacyQueryTobinTax(t *testing.T) {
 	require.NoError(t, err)
 
 	var tobinTaxRes sdk.Dec
-	input.Cdc.UnmarshalJSON(res, &tobinTaxRes)
+	err = input.Cdc.UnmarshalJSON(res, &tobinTaxRes)
+	require.NoError(t, err)
 	require.Equal(t, denom.TobinTax, tobinTaxRes)
 }

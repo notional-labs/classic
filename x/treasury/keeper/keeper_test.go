@@ -93,7 +93,8 @@ func TestMicroLunaIssuance(t *testing.T) {
 		input.TreasuryKeeper.RecordEpochInitialIssuance(input.Ctx)
 		require.Equal(t, initialSupply.Amount.Add(sdk.NewInt(i)), input.TreasuryKeeper.GetEpochInitialIssuance(input.Ctx).AmountOf(core.MicroLunaDenom))
 
-		input.BankKeeper.MintCoins(input.Ctx, faucetAccountName, sdk.NewCoins(sdk.NewCoin(core.MicroLunaDenom, sdk.OneInt())))
+		err := input.BankKeeper.MintCoins(input.Ctx, faucetAccountName, sdk.NewCoins(sdk.NewCoin(core.MicroLunaDenom, sdk.OneInt())))
+		require.NoError(t, err)
 	}
 }
 

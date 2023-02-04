@@ -12,7 +12,7 @@ func NewGenesisState(
 	feederDelegations []FeederDelegation, missCounters []MissCounter,
 	aggregateExchangeRatePrevotes []AggregateExchangeRatePrevote,
 	aggregateExchangeRateVotes []AggregateExchangeRateVote,
-	TobinTaxes []TobinTax,
+	TobinTaxes []TobinTax, //nolint:gocritic
 ) *GenesisState {
 	return &GenesisState{
 		Params:                        params,

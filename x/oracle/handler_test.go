@@ -144,12 +144,12 @@ func TestAggregatePrevoteVote(t *testing.T) {
 
 	// Invalid exchange rate with valid real period
 	input.Ctx = input.Ctx.WithBlockHeight(1)
-	aggregateExchangeRateVoteMsg = types.NewMsgAggregateExchangeRateVote(salt, invalidExchangeRateStr, sdk.AccAddress(keeper.Addrs[0]), keeper.ValAddrs[0])
+	aggregateExchangeRateVoteMsg = types.NewMsgAggregateExchangeRateVote(salt, invalidExchangeRateStr, keeper.Addrs[0], keeper.ValAddrs[0])
 	_, err = h(input.Ctx, aggregateExchangeRateVoteMsg)
 	require.Error(t, err)
 
 	// Unauthorized feeder
-	aggregateExchangeRateVoteMsg = types.NewMsgAggregateExchangeRateVote(salt, invalidExchangeRateStr, sdk.AccAddress(keeper.Addrs[1]), keeper.ValAddrs[0])
+	aggregateExchangeRateVoteMsg = types.NewMsgAggregateExchangeRateVote(salt, invalidExchangeRateStr, keeper.Addrs[1], keeper.ValAddrs[0])
 	_, err = h(input.Ctx, aggregateExchangeRateVoteMsg)
 	require.Error(t, err)
 

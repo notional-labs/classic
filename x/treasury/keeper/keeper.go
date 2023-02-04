@@ -264,7 +264,7 @@ func (k Keeper) GetTR(ctx sdk.Context, epoch int64) sdk.Dec {
 }
 
 // SetTR stores the tax rewards for the epoch
-func (k Keeper) SetTR(ctx sdk.Context, epoch int64, TR sdk.Dec) {
+func (k Keeper) SetTR(ctx sdk.Context, epoch int64, TR sdk.Dec) { //nolint:gocritic
 	store := ctx.KVStore(k.storeKey)
 
 	bz := k.cdc.MustMarshal(&sdk.DecProto{Dec: TR})
@@ -298,7 +298,7 @@ func (k Keeper) GetSR(ctx sdk.Context, epoch int64) sdk.Dec {
 }
 
 // SetSR stores the seigniorage rewards for the epoch
-func (k Keeper) SetSR(ctx sdk.Context, epoch int64, SR sdk.Dec) {
+func (k Keeper) SetSR(ctx sdk.Context, epoch int64, SR sdk.Dec) { //nolint:gocritic
 	store := ctx.KVStore(k.storeKey)
 
 	bz := k.cdc.MustMarshal(&sdk.DecProto{Dec: SR})
@@ -332,7 +332,7 @@ func (k Keeper) GetTSL(ctx sdk.Context, epoch int64) sdk.Int {
 }
 
 // SetTSL stores the total staked luna for the epoch
-func (k Keeper) SetTSL(ctx sdk.Context, epoch int64, TSL sdk.Int) {
+func (k Keeper) SetTSL(ctx sdk.Context, epoch int64, TSL sdk.Int) { //nolint:gocritic
 	store := ctx.KVStore(k.storeKey)
 
 	bz := k.cdc.MustMarshal(&sdk.IntProto{Int: TSL})
