@@ -63,7 +63,8 @@ func (suite *AnteTestSuite) TestEnsureBurnTaxModule() {
 	taxes := sdk.NewCoins(sdk.NewInt64Coin(core.MicroSDRDenom, expectedTax.Int64()))
 
 	bk := suite.app.BankKeeper
-	bk.MintCoins(suite.ctx, minttypes.ModuleName, sendCoins)
+	err = bk.MintCoins(suite.ctx, minttypes.ModuleName, sendCoins)
+	suite.Require().NoError(err)
 
 	// Populate the FeeCollector module with taxes
 	bk.SendCoinsFromModuleToModule(suite.ctx, minttypes.ModuleName, types.FeeCollectorName, taxes)
@@ -86,4 +87,3 @@ func (suite *AnteTestSuite) TestEnsureBurnTaxModule() {
 	// Total supply should have decreased by the tax amount
 	suite.Require().Equal(taxes, totalSupply.Sub(supplyAfterBurn))
 }
-

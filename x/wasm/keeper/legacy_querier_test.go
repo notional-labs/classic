@@ -55,7 +55,7 @@ func TestLegacyContractState(t *testing.T) {
 	bz, err := input.Cdc.MarshalJSON(types.NewQueryRawStoreParams(addr, []byte("foo")))
 	require.NoError(t, err)
 
-	res, err := querier(ctx, []string{types.QueryRawStore}, abci.RequestQuery{Data: []byte(bz)})
+	res, err := querier(ctx, []string{types.QueryRawStore}, abci.RequestQuery{Data: bz})
 	require.NoError(t, err)
 	require.Equal(t, []byte(`"bar"`), res)
 
@@ -63,7 +63,7 @@ func TestLegacyContractState(t *testing.T) {
 	bz, err = input.Cdc.MarshalJSON(types.NewQueryRawStoreParams(addr, []byte{0x0, 0x1}))
 	require.NoError(t, err)
 
-	res, err = querier(ctx, []string{types.QueryRawStore}, abci.RequestQuery{Data: []byte(bz)})
+	res, err = querier(ctx, []string{types.QueryRawStore}, abci.RequestQuery{Data: bz})
 	require.NoError(t, err)
 	require.Equal(t, []byte(`{"count":8}`), res)
 
@@ -71,7 +71,7 @@ func TestLegacyContractState(t *testing.T) {
 	bz, err = input.Cdc.MarshalJSON(types.NewQueryContractParams(addr, []byte(`{"verifier":{}}`)))
 	require.NoError(t, err)
 
-	res, err = querier(ctx, []string{types.QueryContractStore}, abci.RequestQuery{Data: []byte(bz)})
+	res, err = querier(ctx, []string{types.QueryContractStore}, abci.RequestQuery{Data: bz})
 	require.NoError(t, err)
 	require.Equal(t, fmt.Sprintf(`{"verifier":"%s"}`, anyAddr.String()), string(res))
 
@@ -79,18 +79,18 @@ func TestLegacyContractState(t *testing.T) {
 	bz, err = input.Cdc.MarshalJSON(types.NewQueryContractParams(addr, []byte(`{"raw":{"key":"config"}}`)))
 	require.NoError(t, err)
 
-	_, err = querier(ctx, []string{types.QueryContractStore}, abci.RequestQuery{Data: []byte(bz)})
+	_, err = querier(ctx, []string{types.QueryContractStore}, abci.RequestQuery{Data: bz})
 	require.Error(t, err)
 
 	bz, err = input.Cdc.MarshalJSON(types.NewQueryCodeIDParams(contractID))
-	_, err = querier(ctx, []string{types.QueryGetByteCode}, abci.RequestQuery{Data: []byte(bz)})
+	_, err = querier(ctx, []string{types.QueryGetByteCode}, abci.RequestQuery{Data: bz})
 	require.NoError(t, err)
 
-	_, err = querier(ctx, []string{types.QueryGetCodeInfo}, abci.RequestQuery{Data: []byte(bz)})
+	_, err = querier(ctx, []string{types.QueryGetCodeInfo}, abci.RequestQuery{Data: bz})
 	require.NoError(t, err)
 
 	bz, err = input.Cdc.MarshalJSON(types.NewQueryContractAddressParams(addr))
-	_, err = querier(ctx, []string{types.QueryGetContractInfo}, abci.RequestQuery{Data: []byte(bz)})
+	_, err = querier(ctx, []string{types.QueryGetContractInfo}, abci.RequestQuery{Data: bz})
 	require.NoError(t, err)
 
 	_, err = querier(ctx, []string{types.QueryParameters}, abci.RequestQuery{})
@@ -154,7 +154,7 @@ func TestLegacyMultipleGoroutines(t *testing.T) {
 			bz, err := input.Cdc.MarshalJSON(types.NewQueryContractParams(addr, []byte(`{"verifier":{}}`)))
 			require.NoError(t, err)
 
-			res, err := querier(ctx, []string{types.QueryContractStore}, abci.RequestQuery{Data: []byte(bz)})
+			res, err := querier(ctx, []string{types.QueryContractStore}, abci.RequestQuery{Data: bz})
 			require.NoError(t, err)
 			require.Equal(t, fmt.Sprintf(`{"verifier":"%s"}`, anyAddr.String()), string(res))
 
