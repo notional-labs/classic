@@ -1,5 +1,8 @@
 go 1.18
 
+// THIS BRANCH CONTAINS STATE BREAKING CHANGES
+// THIS BRANCH COULD REQUIRE AN UPGRADE HANDLER AND MAY NEED COORDINATION ABOUT THE MODULE VERSION MAP
+// THIS CODE CARRIES NO GUARANTEE WHATSOEVER AND IS NOT SUPPORTED BY NOTIONAL LABS
 // this build of Terra classic has been prepared by Jacob Gadikian of Notional Labs on Sunday, February 5th, 2023.
 // Jacob has made numerous attempts to reach Ed Kim about these issues:
 // 1) by twitter DM, where we previously corresponded frequently
@@ -10,14 +13,14 @@ go 1.18
 
 // this go.mod file has been marked up to indicate where issues lie.
 // the issues are:
-// 1. ibc-go is v1.1.5 instead of v1.1.7
-// 2. both ibc-go v1.1.5 and v1.1.7 have a transfer module that is an attack vector
+// 1. ibc-go is v1.1.5 instead of v1.1.7 <- FIXED IN THIS BRANCH
+// 2. both ibc-go v1.1.5 and v1.1.7 have a transfer module that is an attack vector <- FIXED IN THIS BRANCH
 // 3. wasmvm is subject to nearly every known issue that's been reported about cosmwasm over the past few years:
 //    - halts
 //    - state corruption
 //    - memory exhaustion
 //    - forking the chain into as many forks as there are validators
-// 4. ibc-go v1.3.0 eliminates the risk found in v1.1.5 and v1.1.7, but upgrading wasn't a priority for Tobias from the L1 task force
+// 4. ibc-go v1.3.0 eliminates the risk found in v1.1.5 and v1.1.7, but upgrading wasn't a priority for Tobias from the L1 task force <- FIXED IN THIS BRANCH
 // 5. The chain has too many keys for goleveldb to be performant
 // 6. It is no longer possible to make archive nodes and no time was put into recreating a sync pattern.
 // 7. Allnodes.com:
@@ -35,8 +38,8 @@ module github.com/terra-money/core
 
 require (
 	github.com/CosmWasm/wasmvm v0.16.6 // this is an attack vector (halts and state corruption)
-	github.com/cosmos/cosmos-sdk v0.44.5
-	github.com/cosmos/ibc-go v1.1.7 // this is an attack vector (transfer module)
+	github.com/cosmos/cosmos-sdk v0.44.6
+	github.com/cosmos/ibc-go v1.3.0 // this is an attack vector (transfer module)
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
 	github.com/google/gofuzz v1.2.0
@@ -68,7 +71,7 @@ require (
 	github.com/cespare/xxhash v1.1.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/coinbase/rosetta-sdk-go v0.7.0 // indirect
-	github.com/confio/ics23/go v0.6.6 // indirect
+	github.com/confio/ics23/go v0.7.0 // indirect
 	github.com/cosmos/btcutil v1.0.4 // indirect
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gorocksdb v1.2.0 // indirect
